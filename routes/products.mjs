@@ -1,6 +1,6 @@
 import express from "express";
 
-import { products } from "../db/mock-product.mjs";
+import { products } from "../src/db/mock-product.mjs";
 
 import { getProduct, removeProduct, updateProduct, getUniqueId, success } from "./helper.mjs";
 
@@ -44,7 +44,7 @@ productsRouter.delete("/:id", (req, res) => {
     removeProduct(productId);
 
 // Définir un message pour le consommateur de l'API REST
-    const message = `Le produit ${deletedProduct.name} a bien été supprimé !`;
+    const message = `Le produit a bien été supprimé !`;
 
 // Retourner la réponse HTTP en json avec le msg et le produit créé
     res.json(success(message, deletedProduct));

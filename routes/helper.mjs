@@ -1,4 +1,4 @@
-import {products} from "../db/mock-product.mjs";
+import {products} from "../src/db/mock-product.mjs";
 
 const success = (message, data) => {
     return {
@@ -23,7 +23,7 @@ const getUniqueId = (products) => {
 };
 
 const getProduct = (productId) => {
-    return products.find((product) => product.id == productId);
+    return products.find((product) => product.id === productId);
 };
 
 const updateProduct = (productId, updatedProduct) => {
@@ -31,9 +31,9 @@ const updateProduct = (productId, updatedProduct) => {
 };
 
 const removeProduct = (productId) => {
-    products = products.filter((product) => product.id != productId);
-};
-
-
+    let newProducts = [];
+    newProducts = products.filter(product => product.id !== parseInt(productId));
+    products.length = 0;
+    products.push(...newProducts);}
 
 export { getProduct, removeProduct, updateProduct, getUniqueId, success };
