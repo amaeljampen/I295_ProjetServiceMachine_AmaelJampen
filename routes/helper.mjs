@@ -1,3 +1,11 @@
+const success = (message, data) => {
+    return {
+        message: message,
+        data: data,
+    };
+};
+
+/*
 import {products} from "../src/db/mock-product.mjs";
 
 const success = (message, data) => {
@@ -6,6 +14,7 @@ const success = (message, data) => {
         data: data,
     };
 };
+
 
 const getUniqueId = (products) => {
 
@@ -37,3 +46,4 @@ const removeProduct = (productId) => {
     products.push(...newProducts);}
 
 export { getProduct, removeProduct, updateProduct, getUniqueId, success };
+*/
