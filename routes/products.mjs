@@ -78,6 +78,28 @@ productsRouter.put("/:id", (req, res) => {
     // Retourner la réponse HTTP en json avec le msg et le produit créé
     res.json(success(message, updatedProduct));
 });
+
+/////////////////////////////////
+TEST Formatif Pratique
+/////////////////////////////////
+
+productsRouter.get("/", (req, res) => {
+  // ex. 1
+  const count = products.length;
+  const message = `La liste des ${count} produits a bien été récupérée.`;
+  res.json(success(message, products));
+});
+
+// ex. 2
+productsRouter.get("/filter", (req, res) => {
+  const price = 2.99
+  const filtered_products = products.filter(product => product.Price >= price);
+  const message = `Voici la liste des produit à plus de ${prise} CHF`
+  res.json(success(message, filtered_products))
+});
+
+/////////////////////////////////
+
 */
 
 productsRouter.get("/", (req, res) => {
@@ -139,3 +161,7 @@ res.json(success(message, updatedProduct));
 });
 
 export { productsRouter };
+
+
+
+
