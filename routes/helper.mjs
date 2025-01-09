@@ -47,3 +47,6 @@ const removeProduct = (productId) => {
 
 export { getProduct, removeProduct, updateProduct, getUniqueId, success };
 */
+
+export { success };
+
