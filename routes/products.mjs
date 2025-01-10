@@ -2,13 +2,19 @@ import express from "express";
 
 import { products } from "../src/db/mock-product.mjs";
 
-import { Product } from "../src/db/sequelize.mjs";
+import {Product, sequelize} from "../src/db/sequelize.mjs";
 
 const productsRouter = express();
 
 import { success } from "./helper.mjs";
 
+import { ValidationError } from "sequelize";
+
 /*
+////////////////////////////////////
+CODE MORT APRES EX7
+////////////////////////////////////
+
 import { getProduct, removeProduct, updateProduct, getUniqueId, } from "./helper.mjs";
 
 import { success } from "./helper.mjs";
@@ -122,52 +128,56 @@ productsRouter.post("/", (req, res) => {
             res.json(success(message, createdProduct));
         })
         .catch((error) => {
+            if (error instanceof ValidationError) {
+                return res.status(400).json({ message: error.message, data: error });
+            }
             const message =
                 "Le produit n'a pas pu être ajouté. Merci de réessayer dans quelques instants.";
             res.status(500).json({ message, data: error });
         });
 });
 
+
 productsRouter.delete("/:id", (req, res) => {
-
-    Product.findByPk(req.params.id).then((deletedProduct) => {
-
-        Product.destroy({
-
-            where: { id: deletedProduct.id },
-
-        }).then((_) => {
-
+    Product.findByPk(req.params.id)
+        .then((deletedProduct) => {
+            if (deletedProduct === null) {
+                const message =
+                    "Le produit demandé n'existe pas. Merci de réessayer avec un autre identifiant.";
+// A noter ici le return pour interrompre l'exécution du code
+                return res.status(404).json({ message });
+            }
+            return Product.destroy({
+                where: { id: deletedProduct.id },
+            }).then((_) => {
 // Définir un message pour le consommateur de l'API REST
-            const message = `Le produit ${deletedProduct.name} a bien été supprimé !`;
-
+                const message = `Le produit ${deletedProduct.name} a bien été supprimé !`;
 // Retourner la réponse HTTP en json avec le msg et le produit créé
-            res.json(success(message, deletedProduct));
+                res.json(success(message, deletedProduct));
+            });
+        })
+        .catch((error) => {
+            const message =
+                "Le produit n'a pas pu être supprimé. Merci de réessayer dans quelques instants.";
+            res.status(500).json({ message, data: error });
         });
-    });
 });
 
 productsRouter.put("/:id", (req, res) => {
     const productId = req.params.id;
     Product.update(req.body, { where: { id: productId } })
         .then((_) => {
-            Product.findByPk(productId)
-                .then((updatedProduct) => {
-                    if (updatedProduct === null) {
-                        const message =
-                            "Le produit demandé n'existe pas. Merci de réessayer avec un autre identifiant.";
+            return Product.findByPk(productId).then((updatedProduct) => {
+                if (updatedProduct === null) {
+                    const message =
+                        "Le produit demandé n'existe pas. Merci de réessayer avec un autre identifiant.";
 // A noter ici le return pour interrompre l'exécution du code
-                        return res.status(404).json({ message });
-                    }
+                    return res.status(404).json({ message });
+                }
 // Définir un message pour l'utilisateur de l'API REST
-                    const message = `Le produit ${updatedProduct.name} dont l'id vaut ${updatedProduct.id} a été mis à jour avec succès `
+                const message = `Le produit ${updatedProduct.name} dont l'id vaut ${updatedProduct.id} a été mis à jour avec succès`
 // Retourner la réponse HTTP en json avec le msg et le produit créé
 res.json(success(message, updatedProduct));
-})
-.catch((error) => {
-const message =
-"Le produit n'a pas pu être mis à jour. Merci de réessayer dans quelques instants.";
-res.status(500).json({ message, data: error });
 });
 })
 .catch((error) => {
