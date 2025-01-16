@@ -16,6 +16,21 @@ const ProductModel = (sequelize, DataTypes) => {
                 },
                 validate: {
                     is: {
+                        /*
+    ^ : Indique le début de la chaîne.
+    [A-Za-z\s] : Définit un ensemble de caractères autorisés :
+        A-Z : Lettres majuscules de l'alphabet anglais.
+        a-z : Lettres minuscules de l'alphabet anglais.
+        \s : Caractères d'espacement (espaces, tabulations, etc.).
+    * : Permet de correspondre à zéro ou plusieurs occurrences des caractères de l'ensemble.
+    $ : Indique la fin de la chaîne.
+
+Ce que cela fait :
+
+    Vérifie que la chaîne contient uniquement des lettres (majuscules et minuscules) et des espaces.
+    Autorise les chaînes vides (grâce au quantificateur *).
+    Rejette les chaînes contenant des chiffres, des caractères spéciaux ou de la ponctuation.*/
+
                         args: /^[A-Za-z\s]*$/,
                         msg: "Seules les lettres et les espaces sont autorisées.",
                     },
